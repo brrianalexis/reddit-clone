@@ -1,8 +1,8 @@
 import { PrimaryKey, Property, Entity } from '@mikro-orm/core';
 import { ObjectType, Field } from 'type-graphql';
 
-@ObjectType()
-@Entity()
+@ObjectType() //?   este decorador convierte a la clase en un ObjectType de type-graphql. los decoradores pueden stackearse, esta clase es una Entity y un ObjectType a la vez
+@Entity() //?   este decorador le dice a MikroORM que esto es una entidad que corresponde a una tabla de la db.
 export class Post {
   @Field()
   @PrimaryKey()

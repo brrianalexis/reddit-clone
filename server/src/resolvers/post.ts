@@ -2,8 +2,10 @@ import { Resolver, Query, Mutation, Ctx, Arg } from 'type-graphql';
 import { Post } from '../entities/Post';
 import { MyContext } from '../types';
 
+//?   para declarar resolvers con type-graphql, hay que declarar clases y usar el decorador @Resolver()
 @Resolver()
 export class PostResolver {
+  //?   lo que va adentro de los decoradorers @Query() y @Mutation es el retorno de la query o mutation
   @Query(() => [Post])
   posts(@Ctx() { em }: MyContext): Promise<Post[]> {
     return em.find(Post, {});
