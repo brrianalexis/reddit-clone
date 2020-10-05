@@ -1,4 +1,5 @@
 import { theme as chakraTheme } from '@chakra-ui/core';
+import * as chakraIcons from '@chakra-ui/icons';
 
 const fonts = { ...chakraTheme.fonts, mono: `'Menlo', monospace` };
 
@@ -13,7 +14,7 @@ const theme = {
   fonts,
   breakpoints,
   icons: {
-    ...chakraTheme.icons,
+    ...chakraIcons,
     logo: {
       path: (
         <svg
