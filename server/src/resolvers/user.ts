@@ -49,7 +49,7 @@ export class UserResolver {
       return null;
     }
 
-    const user = await em.findOne(User, { id: req.session.userId });
+    const user = await em.findOne(User, { id: req.session!.userId });
     return user;
   }
   @Mutation(() => UserResponse)
@@ -104,7 +104,7 @@ export class UserResolver {
     }
 
     //?   guarda una cookie con el usuario para loguearlo cuando se registra
-    req.session.userId = user.id;
+    req.session!.userId = user.id;
 
     return {
       user,
@@ -143,9 +143,9 @@ export class UserResolver {
     }
 
     //?   el signo de exclamación antes de userId le especifica a TypeScript que no va a ser undefined
-    // req.session!.userId = user.id;
+    req.session!.userId = user.id;
     //?   modificamos el tipado de req dentro de ../types.ts para darle tipado a req.session como Express.Session. originalmente está tipado como session?: Express.Session; pero si le quitamos el signo de pregunta, le estamos diciendo explícitamente al compilador que no va a ser undefined. con eso, deja de ser necesario el signo de exclamación
-    req.session.userId = user.id;
+    // req.session.userId = user.id;
 
     return {
       user,
