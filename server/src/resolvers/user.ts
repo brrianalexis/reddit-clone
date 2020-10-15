@@ -46,7 +46,7 @@ export class UserResolver {
   @Query(() => User, { nullable: true })
   async me(@Ctx() { req, em }: MyContext) {
     //?   no estás logueado
-    if (!req.session.userId) {
+    if (!req.session!.userId) {
       return null;
     }
 
