@@ -1,0 +1,6 @@
+#?    La ventaja de usar fragments en GraphQL es la facilidad con la que va a poder escalar el código.
+#?    En caso de querer agregar un campo, basta con agregarlo en el fragment en vez de en todas las queries y mutations
+fragment RegularUser on User {
+  id
+  username
+}
