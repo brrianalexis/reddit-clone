@@ -12,6 +12,7 @@ import { EntityManager } from '@mikro-orm/postgresql';
 import argon2 from 'argon2';
 import { MyContext } from '../types';
 import { User } from '../entities/User';
+import { COOKIE_NAME } from 'src/constants';
 
 //?   InputType's podemos usarlos como args en las mutations
 @InputType()
@@ -157,5 +158,20 @@ export class UserResolver {
     return {
       user,
     };
+  }
+  //?   esta mutation va a destruir la session de redis y una vez que la destruye, limpiar la cookie
+  @Mutation(() => Boolean)
+  logout(@Ctx() { req, res }: MyContext) {
+    return new Promise(resolve =>
+      req.session?.destroy(err => {
+        res.clearCookie(COOKIE_NAME);
+        if (err) {
+          console.log(err);
+          resolve(false);
+          return;
+        }
+        resolve(true);
+      })
+    );
   }
 }
