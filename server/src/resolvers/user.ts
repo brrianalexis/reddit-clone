@@ -12,7 +12,7 @@ import { EntityManager } from '@mikro-orm/postgresql';
 import argon2 from 'argon2';
 import { MyContext } from '../types';
 import { User } from '../entities/User';
-import { COOKIE_NAME } from 'src/constants';
+import { COOKIE_NAME } from '../constants';
 
 //?   InputType's podemos usarlos como args en las mutations
 @InputType()
