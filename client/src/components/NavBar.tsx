@@ -2,12 +2,17 @@ import React from 'react';
 import NextLink from 'next/link';
 import { Box, Button, Flex, Link } from '@chakra-ui/core';
 import { useLogoutMutation, useMeQuery } from '../generated/graphql';
+import { isServer } from '../utils/isServer';
 
 interface NavBarProps {}
 
 export const NavBar: React.FC<NavBarProps> = ({}) => {
   const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
-  const [{ data, fetching }] = useMeQuery();
+  const [{ data, fetching }] = useMeQuery({
+    //*   para que la query no corra en el server, en pages que tienen activado SSR
+    //?   porque en el server no hay cookie, entonces data siempre va a ser null
+    pause: isServer(),
+  });
 
   let body = null;
 
