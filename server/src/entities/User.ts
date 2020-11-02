@@ -20,6 +20,10 @@ export class User {
   @Property({ type: 'text', unique: true })
   username!: string;
 
+  @Field(() => String)
+  @Property({ type: 'text', unique: true })
+  email!: string;
+
   //?   Al no tener el decorador @Field(), no se puede seleccionar la contraseña, solo va a ser una columna en la db
   @Property({ type: 'text' })
   password!: string;

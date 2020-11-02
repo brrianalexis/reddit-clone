@@ -1,7 +1,7 @@
-import React from 'react';
 import { useRouter } from 'next/router';
+import NextLink from 'next/link';
 import { Formik, Form } from 'formik';
-import { Box, Button } from '@chakra-ui/core';
+import { Box, Button, Flex, Link } from '@chakra-ui/core';
 import { withUrqlClient } from 'next-urql';
 import { Wrapper } from '../components/Wrapper';
 import { InputField } from '../components/InputField';
@@ -16,14 +16,13 @@ const Login: React.FC<{}> = ({}) => {
   return (
     <Wrapper variant="small">
       <Formik
-        initialValues={{ username: '', password: '' }}
+        initialValues={{ usernameOrEmail: '', password: '' }}
         onSubmit={async (values, { setErrors }) => {
-          const response = await login({ options: values });
+          const response = await login(values);
           //?   acá el optional chaining lo usamos para que en la condicion se evalúe a fondo, ya que response.data puede ser undefined
           //?   en el caso de que data sea undefined, por el optional chaining, no va a tirar error
           //?   sin optional chaining, tiraría error en caso de ser undefined
           if (response.data?.login.errors) {
-            [{ field: 'username', message: 'some error' }];
             setErrors(toErrorMap(response.data.login.errors));
           } else if (response.data?.login.user) {
             router.push('/');
@@ -33,9 +32,9 @@ const Login: React.FC<{}> = ({}) => {
         {({ isSubmitting }) => (
           <Form>
             <InputField
-              name="username"
-              placeholder="username"
-              label="Username"
+              name="usernameOrEmail"
+              placeholder="username or email"
+              label="Username or Email"
             />
             <Box mt={4}>
               <InputField
@@ -45,6 +44,11 @@ const Login: React.FC<{}> = ({}) => {
                 label="Password"
               />
             </Box>
+            <Flex mt={2}>
+              <NextLink href="forgot-password">
+                <Link ml="auto">Forgot your password?</Link>
+              </NextLink>
+            </Flex>
             <Button
               type="submit"
               colorScheme="teal"
