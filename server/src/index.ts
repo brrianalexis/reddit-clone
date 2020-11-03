@@ -1,7 +1,6 @@
 import 'reflect-metadata';
 import { config } from 'dotenv';
-import { MikroORM } from '@mikro-orm/core';
-import mikroConfig from './mikro-orm-config';
+import { createConnection } from 'typeorm';
 import Redis from 'ioredis';
 import session from 'express-session';
 import connectRedis from 'connect-redis';
@@ -12,12 +11,22 @@ import cors from 'cors';
 import { COOKIE_NAME, __prod__ } from './constants';
 import { PostResolver } from './resolvers/post';
 import { UserResolver } from './resolvers/user';
+import { Post } from './entities/Post';
+import { User } from './entities/User';
 
 config();
 
 const main = async () => {
-  const orm = await MikroORM.init(mikroConfig);
-  await orm.getMigrator().up();
+  // const connection =
+  await createConnection({
+    type: 'postgres',
+    database: 'redditclone2',
+    username: 'postgres',
+    password: process.env.DB_PASS,
+    logging: true,
+    synchronize: true,
+    entities: [Post, User],
+  });
 
   const app = express();
 
@@ -57,7 +66,7 @@ const main = async () => {
       validate: false,
     }),
     //?   context es un objeto especial al que pueden acceder todos los resolvers. en este caso vamos a pasar em de MikroORM para realizar las operaciones de la db
-    context: ({ req, res }) => ({ em: orm.em, req, res, redis }),
+    context: ({ req, res }) => ({ req, res, redis }),
   });
 
   apolloServer.applyMiddleware({

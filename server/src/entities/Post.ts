@@ -1,22 +1,29 @@
-import { PrimaryKey, Property, Entity } from '@mikro-orm/core';
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { ObjectType, Field } from 'type-graphql';
 
 @ObjectType() //?   este decorador convierte a la clase en un ObjectType de type-graphql. los decoradores pueden stackearse, esta clase es una Entity y un ObjectType a la vez
 @Entity() //?   este decorador le dice a MikroORM que esto es una entidad que corresponde a una tabla de la db.
-export class Post {
+export class Post extends BaseEntity {
   @Field()
-  @PrimaryKey()
+  @PrimaryGeneratedColumn()
   id!: number;
 
   @Field(() => String)
-  @Property({ type: 'date' })
-  createdAt = new Date();
+  @CreateDateColumn()
+  createdAt: Date;
 
   @Field(() => String)
-  @Property({ type: 'date', onUpdate: () => new Date() })
-  updatedAt = new Date();
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @Field(() => String)
-  @Property({ type: 'text' })
+  @Column()
   title!: string;
 }
