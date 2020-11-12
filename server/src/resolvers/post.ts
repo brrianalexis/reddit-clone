@@ -1,10 +1,30 @@
-import { Resolver, Query, Mutation, Arg } from 'type-graphql';
+import { MyContext } from '../types';
+import { isAuth } from '../utils/middleware/isAuth';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Arg,
+  Field,
+  InputType,
+  Ctx,
+  UseMiddleware,
+} from 'type-graphql';
 import { Post } from '../entities/Post';
+
+@InputType()
+class PostInput {
+  @Field()
+  title: string;
+
+  @Field()
+  text: string;
+}
 
 //?   para declarar resolvers con type-graphql, hay que declarar clases y usar el decorador @Resolver()
 @Resolver()
 export class PostResolver {
-  //?   lo que va adentro de los decoradorers @Query() y @Mutation es el retorno de la query o mutation
+  //?   lo que va adentro de los decoradorers @Query() y @Mutation() es el retorno de la query o mutation
   @Query(() => [Post])
   posts(): Promise<Post[]> {
     return Post.find();
@@ -16,8 +36,12 @@ export class PostResolver {
   }
 
   @Mutation(() => Post)
-  async createPost(@Arg('title') title: string): Promise<Post> {
-    return Post.create({ title }).save();
+  @UseMiddleware(isAuth)
+  async createPost(
+    @Arg('input') input: PostInput,
+    @Ctx() { req }: MyContext
+  ): Promise<Post> {
+    return Post.create({ ...input, creatorId: req.session!.userId }).save();
   }
 
   @Mutation(() => Post, { nullable: true })
